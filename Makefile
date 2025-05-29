@@ -9,6 +9,7 @@ OBJDIR   := build
 OBJS     := \
     $(OBJDIR)/create_queue.o \
 		$(OBJDIR)/enqueue.o      \
+		$(OBJDIR)/queue_utils.o  \
     $(OBJDIR)/main.o
 
 .PHONY: all clean
@@ -23,6 +24,9 @@ $(OBJDIR)/create_queue.o: $(SRCDIR)/create_queue.asm $(SRCDIR)/structs.inc | $(O
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 $(OBJDIR)/enqueue.o: $(SRCDIR)/enqueue.asm $(SRCDIR)/structs.inc | $(OBJDIR)
+	$(ASM) $(ASMFLAGS) $< -o $@
+
+$(OBJDIR)/queue_utils.o: $(SRCDIR)/queue_utils.asm $(SRCDIR)/structs.inc | $(OBJDIR)
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 # Compile C main into build/
