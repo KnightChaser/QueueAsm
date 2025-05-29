@@ -21,11 +21,15 @@ queue_enqueue:
     mov     rbx, rdi  ; rbx <- q* (queue pointer)
     mov     rdx, rsi  ; rdx <- value
 
+    mov     rdx, rsi  ; rdx = value
+    push    rdx       ; Save value on stack because malloc() modifies rdx
+
     ; malloc a new node
     mov     rdi, NODE_SIZE
-    call    malloc    ; rax = ptr or 0 (NULL)
+    call    malloc
     test    rax, rax
     je      .oom
+    pop     rdx       ; Restore value from stack
 
     ; init node: data = value, next = 0 (NULL)
     mov     [rax + NODE_DATA], rdx          ; Set node data
