@@ -3,6 +3,7 @@
 
 typedef struct Queue Queue;
 extern Queue *queue_create(void);
+extern void queue_enqueue(Queue *q, int value);
 
 int main(int argc, char *argv[]) {
     Queue *q = queue_create();
@@ -12,5 +13,8 @@ int main(int argc, char *argv[]) {
     }
     printf("Queue allocated at: %p\n", (void *)q);
 
-    return 0;
+    queue_enqueue(q, 42);
+    printf("Enqueued 42 into queue at %p\n", (void *)q);
+
+    return EXIT_SUCCESS;
 }
