@@ -48,6 +48,9 @@ queue_enqueue:
     ; set rear to new node
     mov     [rbx + QUEUE_REAR], rax   ; q->rear <- new node
 
+    ; increment count
+    inc     qword [rbx + QUEUE_COUNT] ; q->count++
+
     pop     rbx       ; Restore rbx
     pop     rbp       ; Restore rbp
     ret

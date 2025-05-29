@@ -27,6 +27,7 @@ queue_create:
     ; zero memory front & rear
     mov   qword [rax + QUEUE_FRONT], 0
     mov   qword [rax + QUEUE_REAR], 0
+    mov   qword [rax + QUEUE_COUNT], 0
 
     pop   rbp
     ret
