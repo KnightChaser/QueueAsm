@@ -8,6 +8,7 @@ SRCDIR   := src
 OBJDIR   := build
 OBJS     := \
     $(OBJDIR)/create_queue.o \
+		$(OBJDIR)/dequeue.o      \
 		$(OBJDIR)/enqueue.o      \
 		$(OBJDIR)/queue_utils.o  \
     $(OBJDIR)/main.o
@@ -21,6 +22,9 @@ $(OBJDIR):
 
 # Assemble ASM module into build/
 $(OBJDIR)/create_queue.o: $(SRCDIR)/create_queue.asm $(SRCDIR)/structs.inc | $(OBJDIR)
+	$(ASM) $(ASMFLAGS) $< -o $@
+
+$(OBJDIR)/dequeue.o: $(SRCDIR)/dequeue.asm $(SRCDIR)/structs.inc | $(OBJDIR)
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 $(OBJDIR)/enqueue.o: $(SRCDIR)/enqueue.asm $(SRCDIR)/structs.inc | $(OBJDIR)
