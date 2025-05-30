@@ -5,6 +5,7 @@ global queue_count
 global queue_is_empty
 global queue_peek
 global queue_print
+global queue_destroy
 
 extern printf
 extern free
@@ -118,3 +119,36 @@ queue_print:
     pop     rbx       ; Restore rbx
     pop     rbp
     ret
+
+;------------------------------------------------------------------------------
+; void queue_destroy(Queue *q)
+;   – frees every Node in the queue, then frees the Queue struct
+;   RDI = pointer to Queue
+;------------------------------------------------------------------------------
+queue_destroy:
+    push    rbp
+    mov     rbp, rsp
+    push    rbx            ; save RBX
+    mov     rbx, rdi       ; RBX ← Queue* (save original pointer)
+
+    ; walk & free all nodes
+    mov     rcx, [rbx + QUEUE_FRONT]  ; RCX = current node
+.destroy_loop:
+    test    rcx, rcx
+    je      .free_queue
+    mov     rax, rcx                  ; RAX = node to free
+    mov     rcx, [rax + NODE_NEXT]    ; RCX = next node
+    push    rcx                       ; Save next node on stack (caller-saved)
+    mov     rdi, rax                  ; RDI = node
+    call    free
+    pop     rcx                       ; Restore next node
+    jmp     .destroy_loop
+
+.free_queue:
+    mov     rdi, rbx       ; RDI = original Queue*
+    call    free           ; free the Queue struct
+
+    pop     rbx            ; restore RBX
+    pop     rbp
+    ret
+
