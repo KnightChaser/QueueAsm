@@ -2,3 +2,6 @@
 build/
 main.o
 queue
+
+# internal files for debugging
+.gdb_history

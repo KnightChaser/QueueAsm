@@ -4,8 +4,16 @@
 global queue_count
 global queue_is_empty
 global queue_peek
+global queue_print
 
+extern printf
+extern free
 extern exit
+
+section .rodata
+fmt_int:    db    "%ld", 0     ; Format for printing integers
+fmt_sep:    db    " -> ", 0    ; Separator for queue elements
+fmt_nl:     db    10 0         ; Newline character
 
 section .text
 ;------------------------------------------------------------------------------
@@ -64,3 +72,49 @@ queue_peek:
 .underflow:
     mov     edi, 1
     call    exit
+
+
+;------------------------------------------------------------------------------
+; void queue_print(Queue *q)
+;   – prints “val1 -> val2 -> …” then newline
+;   RDI = pointer to Queue
+;------------------------------------------------------------------------------
+queue_print:
+    push    rbp
+    mov     rbp, rsp
+    push    rbx       ; Save rbx for use in the loop
+
+    ; start pointer at front
+    mov     rbx, [rdi + QUEUE_FRONT]
+
+.print_loop:
+    test    rbx, rbx
+    jz      .print_done   ; If rbx is NULL, there is no more node to print
+
+    ; printf("%ld", rbx->data);
+    mov     rsi, [rbx + NODE_DATA]
+    lea     rdi, [rel fmt_int]
+    xor     rax, rax
+    call    printf
+
+    ; advance
+    mov     rbx, [rbx + NODE_NEXT]
+    test    rbx, rbx
+    je      .print_done
+
+    ; printf(" -> ");
+    lea     rdi, [rel fmt_sep]
+    xor     rax, rax
+    call    printf
+
+    jmp     .print_loop
+
+.print_done:
+    ; final newline
+    lea     rdi, [rel fmt_nl]
+    xor     rax, rax
+    call    printf
+
+    pop     rbx       ; Restore rbx
+    pop     rbp
+    ret
